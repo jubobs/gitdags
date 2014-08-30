@@ -39,13 +39,14 @@
 % --- repository history graphs ---
 % style definitions
 \tikzset{
-  every node/.style={
+  gitdags node/.style={
     draw,
     node distance = 1.4em,
     drop shadow   = {opacity=0.15},
     font          = \fontfamily{lmtt}\selectfont\small,
   },
   DAGref/.style={
+    gitdags node,
     shape          = rectangle,
     minimum height = 1.4em,
     draw           = solarized-base01,
@@ -63,6 +64,7 @@
     densely dotted,
   },
   DAGcommit/.style={
+    gitdags node,
     shape                        = rounded rectangle,
     rounded rectangle arc length = 90,
     minimum height               = 1.6em,
@@ -79,6 +81,7 @@
     grow right sep = 1.5em,
   },
   gitstates/.style={
+    gitdags node,
     shape           = rectangle,
     rounded corners = .5em,
     minimum width   = 7em,
