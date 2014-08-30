@@ -76,7 +76,6 @@
   graphs/DAG/.style={
     nodes          = DAGcommit,
     edges          = DAGedge,
-    grow right sep = 1em,
     branch down    = 3em,
     grow right sep = 1.5em,
   },
@@ -151,13 +150,11 @@
   \draw[DAGrefedge] (#2) -- (HEAD);
 }
 
-% staging area
-\newcommand\stagingarea
-  {\node[gitSA] (sa) at (current bounding box.south east) {staging area};}
-
-% working tree
-\newcommand\workingtree
-  {\node[gitWT,below=of sa] (wt) {working tree};}
+% staging area and worktree
+\newcommand\SAandWT{%
+  \node[gitSA] (sa) at (current bounding box.south east) {staging area};
+  \node[gitWT,below=of sa] (wt) {working tree};
+}
 
 % arrows pointing from a commit to the staging area or working tree
 \newcommand\toSAorWT[3][]{%
