@@ -150,6 +150,15 @@
   \draw[DAGrefedge] (#2) -- (HEAD);
 }
 
+% remote-branch reference
+\newcommand{\tag}[3][]{%
+  \node[
+    DAGref,
+    fill = solarized-violet!20,
+  ] (#2) [#1] {#2};
+  \draw[DAGrefedge] (#3) -- (#2);
+}
+
 % staging area and worktree
 \newcommand\SAandWT{%
   \node[gitSA] (sa) at (current bounding box.south east) {staging area};
