@@ -111,11 +111,20 @@
     draw         = solarized-base02,
     draw opacity = .75,
   },
-  highlightedcommit/.style={
+  highlighted commit/.style={
     DAGcommit,
     fill opacity = 0,
     draw         = solarized-base02,
     reset preaction,
+  },
+  unreachable commits/.style={
+    draw opacity = .25,
+    fill opacity = .25,
+    reset preaction,
+  },
+  graphs/unreachable/.style={
+    unreachable commits,
+    target edge style = unreachable commits,
   },
 }
 
@@ -167,7 +176,7 @@
 
 % arrows pointing from a commit to the staging area or working tree
 \newcommand\toSAorWT[3][]{%
-  \node[highlightedcommit] at (#2) {\phantom{#2}};
+  \node[highlighted commit] at (#2) {\phantom{#2}};
   \draw[resetarrows] (#2.south) to[out=290, in=170]
     ([xshift=1em,yshift=-1em]#3.north west);
 }
