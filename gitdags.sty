@@ -126,6 +126,15 @@
     unreachable commits,
     target edge style = unreachable commits,
   },
+  placeholder commits/.style={
+    draw opacity = 0,
+    fill opacity = 0,
+    reset preaction,
+  },
+  graphs/placeholder/.style={
+    placeholder commits,
+    target edge style = placeholder commits,
+  },
 }
 
 % directed acyclic graph
