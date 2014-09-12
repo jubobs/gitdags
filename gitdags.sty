@@ -34,6 +34,37 @@
   shapes,
 }
 
+% conflict color
+\colorlet{conflictcolor}{red}
+
+% custom shape, adapted from 102.5.3 in the TikZ 3.0 manual
+\pgfdeclareshape{dogeared}{
+  \inheritsavedanchors[from=rectangle]
+  \inheritanchorborder[from=rectangle]
+  \inheritanchor[from=rectangle]{center}
+  \inheritanchor[from=rectangle]{north}
+  \inheritanchor[from=rectangle]{south}
+  \inheritanchor[from=rectangle]{west}
+  \inheritanchor[from=rectangle]{east}
+  \backgroundpath{%
+    \southwest \pgf@xa=\pgf@x \pgf@ya=\pgf@y
+    \northeast \pgf@xb=\pgf@x \pgf@yb=\pgf@y
+    \pgf@xc=\pgf@xb \advance\pgf@xc by-5pt
+    \pgf@yc=\pgf@yb \advance\pgf@yc by-5pt
+    \pgfpathmoveto{\pgfpoint{\pgf@xa}{\pgf@ya}}
+    \pgfpathlineto{\pgfpoint{\pgf@xa}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yc}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@ya}}
+    \pgfpathclose
+    \pgfpathmoveto{\pgfpoint{\pgf@xc}{\pgf@yb}}
+    \pgfpathlineto{\pgfpoint{\pgf@xc}{\pgf@yc}}
+    \pgfpathlineto{\pgfpoint{\pgf@xb}{\pgf@yc}}
+    \pgfpathclose
+  }
+}
+
+% To cancel a shadow (see http://tex.stackexchange.com/a/198298/21891)
 \tikzset{reset preaction/.code={\def\tikz@preactions{}}}
 
 % --- repository history graphs ---
@@ -79,7 +110,7 @@
     branch down    = 3em,
     grow right sep = 1.5em,
   },
-  gitstates/.style={
+  gitareas/.style={
     gitdags node,
     shape           = rectangle,
     rounded corners = .5em,
@@ -89,7 +120,7 @@
     semithick,
   },
   gitSA/.style={
-    gitstates,
+    gitareas,
     anchor = north west,
     xshift = 1em,
     yshift = -1em,
@@ -98,7 +129,7 @@
     text   = solarized-orange,
   },
   gitWT/.style={
-    gitstates,
+    gitareas,
     node distance = .6em,
     draw          = solarized-violet,
     fill          = solarized-violet!5,
@@ -113,27 +144,45 @@
   },
   highlighted commit/.style={
     DAGcommit,
+    reset preaction,
     fill opacity = 0,
     draw         = solarized-base02,
-    reset preaction,
   },
-  unreachable commits/.style={
+  problematic commits/.style={
+    reset preaction,
     draw opacity = .25,
     fill opacity = .25,
-    reset preaction,
   },
   graphs/unreachable/.style={
-    unreachable commits,
-    target edge style = unreachable commits,
+    problematic commits,
+    target edge style = problematic commits,
+  },
+  graphs/conflict/.style={
+    empty nodes,
+    problematic commits,
+    target edge style = problematic commits,
+    draw              = conflictcolor,
+    fill              = conflictcolor!25,
   },
   placeholder commits/.style={
+    reset preaction,
     draw opacity = 0,
     fill opacity = 0,
-    reset preaction,
   },
   graphs/placeholder/.style={
     placeholder commits,
     target edge style = placeholder commits,
+  },
+  blob/.style={
+    shape          = dogeared,
+    minimum width  = 2em,
+    minimum height = 2.82em,
+    node distance  = .75em,
+    line join      = bevel,
+    draw           = black,
+    fill           = white,
+    align          = left,
+    font           = \ttfamily\tiny,
   },
 }
 
@@ -175,6 +224,20 @@
     fill = solarized-violet!20,
   ] (#2) [#1] {#2};
   \draw[DAGrefedge] (#3) -- (#2);
+}
+
+% the following macro is useful for explaining how merge conflicts arise
+\newcommand\blob[2][]
+  {\node[blob,#1] {#2};}
+
+% to highlight a merge conflict arising in a given file
+\newcommand\blobmc[1]{%
+  \node[
+    blob,
+    draw = conflictcolor,
+    text = conflictcolor,
+    font = \scriptsize,
+    #1] {???};
 }
 
 % staging area and worktree
