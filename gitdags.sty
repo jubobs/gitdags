@@ -187,51 +187,66 @@
 }
 
 % directed acyclic graph
-\newcommand\DAG[1][]{\graph[DAG,#1]}
+\newcommand\gitDAG[1][]{\graph[DAG,#1]}
+
+% helper macro (let's check the name's availability)
+\newcommand\nodename@gitdags{}
 
 % local-branch reference
-\newcommand{\branch}[3][]{%
+\newcommand\gitbranch[4][]{%
+  \renewcommand\nodename@gitdags{#1}%
+  \if\relax\detokenize{#1}\relax% check for empty optional argument
+    \renewcommand\nodename@gitdags{#2}%
+  \fi
   \node[
     DAGref,
     fill = yellow!30,
-  ] (#2) [#1] {#2};
-  \draw[DAGrefedge] (#3) -- (#2);
+  ] (\nodename@gitdags) [#3] {#2};
+  \draw[DAGrefedge] (#4) -- (\nodename@gitdags);
 }
 
 % remote-branch reference
-\newcommand{\remotebranch}[3][]{%
+\newcommand\gitremotebranch[4][]{%
+  \renewcommand\nodename@gitdags{#1}%
+  \if\relax\detokenize{#1}\relax% check for empty optional argument
+    \renewcommand\nodename@gitdags{#2}%
+  \fi
   \node[
     DAGref,
     fill = solarized-blue!20,
-  ] (#2) [#1] {#2};
-  \draw[DAGrefedge] (#3) -- (#2);
+  ] (\nodename@gitdags) [#3] {#2};
+  \draw[DAGrefedge] (#4) -- (\nodename@gitdags);
+}
+
+% tag reference
+\newcommand\gittag[4][]{%
+  \renewcommand\nodename@gitdags{#1}%
+  \if\relax\detokenize{#1}\relax% check for empty optional argument
+    \renewcommand\nodename@gitdags{#2}%
+  \fi
+  \node[
+    DAGref,
+    fill = solarized-magenta!20,
+  ] (\nodename@gitdags) [#3] {#2};
+  \draw[DAGrefedge] (#4) -- (\nodename@gitdags);
 }
 
 % HEAD symbolic reference
-\newcommand{\HEAD}[2][]{%
+\newcommand\gitHEAD[2]{%
   \node[
     DAGref,
     fill          = solarized-red!20,
     node distance = 1em,
-  ] (HEAD) [#1] {HEAD};
-  \draw[DAGrefedge] (#2) -- (HEAD);
-}
-
-% remote-branch reference
-\newcommand{\gittag}[3][]{%
-  \node[
-    DAGref,
-    fill = solarized-violet!20,
-  ] (#2) [#1] {#2};
-  \draw[DAGrefedge] (#3) -- (#2);
+  ] (gitHEAD) [#1] {HEAD};
+  \draw[DAGrefedge] (#2) -- (gitHEAD);
 }
 
 % the following macro is useful for explaining how merge conflicts arise
-\newcommand\blob[2][]
+\newcommand\gitblob[2][]
   {\node[blob,#1] {#2};}
 
 % to highlight a merge conflict arising in a given file
-\newcommand\blobmc[1]{%
+\newcommand\gitblobmc[1]{%
   \node[
     blob,
     draw = conflictcolor,
@@ -242,8 +257,13 @@
 
 % staging area and worktree
 \newcommand\SAandWT{%
-  \node[gitSA] (sa) at (current bounding box.south east) {staging area};
-  \node[gitWT,below=of sa] (wt) {working tree};
+  \node[
+    gitSA,
+  ] (stagingarea) at (current bounding box.south east) {staging area};
+  \node[
+    gitWT,
+    below=of stagingarea,
+  ] (workingtree) {working tree};
 }
 
 % arrows pointing from a commit to the staging area or working tree
