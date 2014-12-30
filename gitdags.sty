@@ -267,13 +267,13 @@
 }
 
 % arrows pointing from a commit to the staging area or working tree
-\newcommand\toSAorWT[3][]{%
-  \node[highlighted commit] at (#2) {\phantom{#2}};
-  \draw[resetarrows] (#2.south) to[out=290, in=170]
-    ([xshift=1em,yshift=-1em]#3.north west);
+\newcommand\toSAorWT[2]{%
+  \node[highlighted commit] at (#1) {\phantom{#1}};
+  \draw[resetarrows] (#1.south) to[out=290, in=170]
+    ([xshift=1em,yshift=-1em]#2.north west);
 }
 
-\newcommand\toSAfrom[2][]{\toSAorWT[#1]{#2}{sa}}
-\newcommand\toWTfrom[2][]{\toSAorWT[#1]{#2}{wt}}
+\newcommand\toSAfrom[1]{\toSAorWT{#1}{stagingarea}}
+\newcommand\toWTfrom[1]{\toSAorWT{#1}{workingtree}}
 
 \endinput
